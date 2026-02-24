@@ -5,14 +5,21 @@ import { GameStartScreen } from './components/GameStartScreen'
 import { GameMain } from './components/GameMain'
 
 export default function StockGame() {
-  const [started, setStarted] = useState(false)
-  const { gameStarted } = useGameStore()
+  const { isPlaying, startGame, getSaveList } = useGameStore()
+  const [showLoadPanel, setShowLoadPanel] = useState(false)
+  
+  // 检查是否有存档
+  const hasSaves = getSaveList().length > 0
 
-  useEffect(() => {
-    if (gameStarted) {
-      setStarted(true)
-    }
-  }, [gameStarted])
+  // 处理开始游戏
+  const handleStartGame = (config: any) => {
+    startGame(config)
+  }
+
+  // 处理读取存档
+  const handleLoadGame = () => {
+    setShowLoadPanel(true)
+  }
 
   return (
     <FluentProvider theme={webLightTheme}>
@@ -22,8 +29,12 @@ export default function StockGame() {
         overflow: 'auto',
         minHeight: '100vh'
       }}>
-        {!started ? (
-          <GameStartScreen />
+        {!isPlaying ? (
+          <GameStartScreen 
+            onStartGame={handleStartGame}
+            onLoadGame={handleLoadGame}
+            hasSaves={hasSaves}
+          />
         ) : (
           <GameMain />
         )}

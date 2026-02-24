@@ -1,39 +1,26 @@
-'use client';
-
 import { useState } from 'react';
 import {
   Button,
   Card,
-  CardHeader,
   Input,
-  Dropdown,
-  Option,
-  Slider,
-  Switch,
   Text,
   Title1,
-  Title2,
   Title3,
   Body1,
-  Body2,
   Caption1,
   Badge,
   makeStyles,
   tokens,
   shorthands,
   Field,
-  MessageBar,
-  MessageBarBody,
 } from '@fluentui/react-components';
 import {
   PersonRegular,
-  XboxControllerRegular,
-  SettingsRegular,
   PlayRegular,
   DocumentRegular,
 } from '@fluentui/react-icons';
-import { PlayerIdentity, GameMode, Difficulty, CustomDifficulty, GameStartConfig } from '../types';
-import { PLAYER_IDENTITIES, DIFFICULTY_CONFIG, DEFAULT_CUSTOM_DIFFICULTY } from '../constants';
+import { PlayerIdentity, GameMode, Difficulty, GameStartConfig } from '../types';
+import { PLAYER_IDENTITIES, DIFFICULTY_CONFIG } from '../constants';
 
 const useStyles = makeStyles({
   container: {
@@ -43,20 +30,20 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     minHeight: '100vh',
     backgroundColor: tokens.colorNeutralBackground3,
-    padding: '24px',
+    padding: '16px',
   },
   card: {
     width: '100%',
-    maxWidth: '900px',
+    maxWidth: '800px',
     backgroundColor: tokens.colorNeutralBackground1,
-    ...shorthands.borderRadius('16px'),
-    boxShadow: tokens.shadow16,
+    ...shorthands.borderRadius('12px'),
+    boxShadow: tokens.shadow8,
   },
   header: {
     textAlign: 'center',
-    padding: '32px',
-    background: `linear-gradient(135deg, ${tokens.colorBrandBackground} 0%, ${tokens.colorBrandBackgroundPressed} 100%)`,
-    ...shorthands.borderRadius('16px 16px 0 0'),
+    padding: '24px',
+    background: `linear-gradient(135deg, ${tokens.colorBrandBackground} 0%, #4a90d9 100%)`,
+    ...shorthands.borderRadius('12px 12px 0 0'),
   },
   title: {
     color: tokens.colorNeutralForegroundOnBrand,
@@ -67,137 +54,109 @@ const useStyles = makeStyles({
     opacity: 0.9,
   },
   body: {
-    padding: '32px',
+    padding: '24px',
   },
   section: {
-    marginBottom: '32px',
+    marginBottom: '24px',
   },
   sectionTitle: {
-    marginBottom: '16px',
+    marginBottom: '12px',
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
   },
   identityGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
     gap: '12px',
-    marginTop: '16px',
+    marginTop: '12px',
   },
   identityCard: {
     cursor: 'pointer',
-    padding: '16px',
-    ...shorthands.borderRadius('12px'),
-    border: `2px solid ${tokens.colorNeutralStroke1}`,
-    transition: 'all 0.2s ease',
-    backgroundColor: tokens.colorNeutralBackground1,
-    ':hover': {
-      borderColor: tokens.colorBrandStroke1,
-      backgroundColor: tokens.colorNeutralBackground1Hover,
+    padding: '12px',
+    ...shorthands.borderRadius('8px'),
+    border: '2px solid transparent',
+    backgroundColor: tokens.colorNeutralBackground3,
+    transition: 'all 0.2s',
+    selectors: {
+      '&:hover': {
+        backgroundColor: tokens.colorNeutralBackground3Hover,
+      },
     },
   },
   identityCardSelected: {
-    borderColor: tokens.colorBrandBackground,
+    border: `2px solid ${tokens.colorBrandBackground}`,
     backgroundColor: tokens.colorBrandBackground2,
   },
   identityHeader: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
-    marginBottom: '8px',
+    gap: '8px',
+    marginBottom: '4px',
   },
   identityIcon: {
-    fontSize: '32px',
-  },
-  identityName: {
-    fontWeight: '600',
-  },
-  identityStats: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-    marginTop: '8px',
-  },
-  statRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    fontSize: '24px',
   },
   modeSelector: {
     display: 'flex',
-    gap: '16px',
-    marginTop: '16px',
+    gap: '12px',
+    marginTop: '12px',
+    flexWrap: 'wrap',
   },
   modeCard: {
     flex: 1,
+    minWidth: '150px',
     cursor: 'pointer',
-    padding: '24px',
-    ...shorthands.borderRadius('12px'),
-    border: `2px solid ${tokens.colorNeutralStroke1}`,
-    transition: 'all 0.2s ease',
+    padding: '16px',
+    ...shorthands.borderRadius('8px'),
+    border: '2px solid transparent',
     textAlign: 'center',
-    backgroundColor: tokens.colorNeutralBackground1,
-    ':hover': {
-      borderColor: tokens.colorBrandStroke1,
+    backgroundColor: tokens.colorNeutralBackground3,
+    transition: 'all 0.2s',
+    selectors: {
+      '&:hover': {
+        backgroundColor: tokens.colorNeutralBackground3Hover,
+      },
     },
   },
   modeCardSelected: {
-    borderColor: tokens.colorBrandBackground,
+    border: `2px solid ${tokens.colorBrandBackground}`,
     backgroundColor: tokens.colorBrandBackground2,
   },
   difficultyGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-    gap: '12px',
-    marginTop: '16px',
+    display: 'flex',
+    gap: '8px',
+    marginTop: '12px',
+    flexWrap: 'wrap',
   },
   difficultyCard: {
     cursor: 'pointer',
-    padding: '16px',
-    ...shorthands.borderRadius('12px'),
-    border: `2px solid ${tokens.colorNeutralStroke1}`,
-    transition: 'all 0.2s ease',
+    padding: '12px 16px',
+    ...shorthands.borderRadius('8px'),
+    border: '2px solid transparent',
     textAlign: 'center',
-    backgroundColor: tokens.colorNeutralBackground1,
-    ':hover': {
-      borderColor: tokens.colorBrandStroke1,
+    backgroundColor: tokens.colorNeutralBackground3,
+    transition: 'all 0.2s',
+    selectors: {
+      '&:hover': {
+        backgroundColor: tokens.colorNeutralBackground3Hover,
+      },
     },
   },
   difficultyCardSelected: {
-    borderColor: tokens.colorBrandBackground,
+    border: `2px solid ${tokens.colorBrandBackground}`,
     backgroundColor: tokens.colorBrandBackground2,
-  },
-  customSettings: {
-    marginTop: '24px',
-    padding: '20px',
-    backgroundColor: tokens.colorNeutralBackground3,
-    ...shorthands.borderRadius('12px'),
-  },
-  customRow: {
-    marginBottom: '20px',
-  },
-  customLabel: {
-    marginBottom: '8px',
-    display: 'flex',
-    justifyContent: 'space-between',
   },
   buttonRow: {
     display: 'flex',
-    gap: '16px',
+    gap: '12px',
     justifyContent: 'center',
-    marginTop: '32px',
+    marginTop: '24px',
+    flexWrap: 'wrap',
   },
   startButton: {
-    minWidth: '200px',
-    height: '48px',
-    fontSize: '16px',
-    fontWeight: '600',
-  },
-  customIdentityForm: {
-    marginTop: '16px',
-    padding: '20px',
-    backgroundColor: tokens.colorNeutralBackground3,
-    ...shorthands.borderRadius('12px'),
+    minWidth: '160px',
+    height: '44px',
   },
 });
 
@@ -213,30 +172,10 @@ export function GameStartScreen({ onStartGame, onLoadGame, hasSaves }: GameStart
   // 玩家信息
   const [playerName, setPlayerName] = useState('');
   const [selectedIdentity, setSelectedIdentity] = useState<PlayerIdentity | null>(null);
-  const [isCustomIdentity, setIsCustomIdentity] = useState(false);
-  const [customIdentity, setCustomIdentity] = useState<PlayerIdentity>({
-    ...PLAYER_IDENTITIES.find(i => i.id === 'custom')!,
-    initialCash: 50000,
-    stressResistance: 50,
-    workEfficiency: 50,
-    investmentSense: 50,
-  });
 
   // 游戏设置
   const [gameMode, setGameMode] = useState<GameMode>('normal');
   const [difficulty, setDifficulty] = useState<Difficulty>('normal');
-  const [customDifficulty, setCustomDifficulty] = useState<CustomDifficulty>(DEFAULT_CUSTOM_DIFFICULTY);
-
-  // 身份选择
-  const handleIdentitySelect = (identity: PlayerIdentity) => {
-    if (identity.id === 'custom') {
-      setIsCustomIdentity(true);
-      setSelectedIdentity(customIdentity);
-    } else {
-      setIsCustomIdentity(false);
-      setSelectedIdentity(identity);
-    }
-  };
 
   // 开始游戏
   const handleStartGame = () => {
@@ -251,13 +190,25 @@ export function GameStartScreen({ onStartGame, onLoadGame, hasSaves }: GameStart
 
     const config: GameStartConfig = {
       playerName: playerName.trim(),
-      playerIdentity: isCustomIdentity ? customIdentity : selectedIdentity,
+      playerIdentity: selectedIdentity,
       gameMode,
       difficulty,
-      customDifficulty: difficulty === 'custom' ? customDifficulty : undefined,
     };
 
     onStartGame(config);
+  };
+
+  // 获取选中样式
+  const getIdentityStyle = (identity: PlayerIdentity) => {
+    return `${styles.identityCard} ${selectedIdentity?.id === identity.id ? styles.identityCardSelected : ''}`;
+  };
+
+  const getModeStyle = (mode: GameMode) => {
+    return `${styles.modeCard} ${gameMode === mode ? styles.modeCardSelected : ''}`;
+  };
+
+  const getDifficultyStyle = (diff: Difficulty) => {
+    return `${styles.difficultyCard} ${difficulty === diff ? styles.difficultyCardSelected : ''}`;
   };
 
   return (
@@ -268,7 +219,7 @@ export function GameStartScreen({ onStartGame, onLoadGame, hasSaves }: GameStart
           <Body1 className={styles.subtitle}>体验股市风云，感悟人生百态</Body1>
         </div>
         
-        <Card className={styles.body}>
+        <div className={styles.body}>
           {/* 玩家名称 */}
           <div className={styles.section}>
             <Title3 className={styles.sectionTitle}>
@@ -286,240 +237,70 @@ export function GameStartScreen({ onStartGame, onLoadGame, hasSaves }: GameStart
 
           {/* 身份选择 */}
           <div className={styles.section}>
-            <Title3 className={styles.sectionTitle}>
-              <XboxControllerRegular /> 选择身份
-            </Title3>
+            <Title3 className={styles.sectionTitle}>选择身份</Title3>
             <div className={styles.identityGrid}>
               {PLAYER_IDENTITIES.map((identity) => (
                 <div
                   key={identity.id}
-                  className={`${styles.identityCard} ${
-                    (isCustomIdentity && identity.id === 'custom') || 
-                    (!isCustomIdentity && selectedIdentity?.id === identity.id)
-                      ? styles.identityCardSelected 
-                      : ''
-                  }`}
-                  onClick={() => handleIdentitySelect(identity)}
+                  className={getIdentityStyle(identity)}
+                  onClick={() => setSelectedIdentity(identity)}
                 >
                   <div className={styles.identityHeader}>
                     <span className={styles.identityIcon}>{identity.icon}</span>
-                    <Text className={styles.identityName}>{identity.name}</Text>
+                    <Text weight="semibold">{identity.name}</Text>
                   </div>
                   <Caption1>{identity.description}</Caption1>
-                  <div className={styles.identityStats}>
-                    <div className={styles.statRow}>
-                      <Caption1>初始资金</Caption1>
-                      <Badge appearance="filled" color="brand">
-                        ¥{identity.initialCash.toLocaleString()}
-                      </Badge>
-                    </div>
-                    <div className={styles.statRow}>
-                      <Caption1>耐压能力</Caption1>
-                      <Caption1>{identity.stressResistance}</Caption1>
-                    </div>
-                    <div className={styles.statRow}>
-                      <Caption1>工作效率</Caption1>
-                      <Caption1>{identity.workEfficiency}</Caption1>
-                    </div>
-                    <div className={styles.statRow}>
-                      <Caption1>投资直觉</Caption1>
-                      <Caption1>{identity.investmentSense}</Caption1>
-                    </div>
+                  <div style={{ marginTop: '8px' }}>
+                    <Badge appearance="filled" color="brand">
+                      ¥{identity.initialCash.toLocaleString()}
+                    </Badge>
                   </div>
                 </div>
               ))}
             </div>
-
-            {/* 自定义身份表单 */}
-            {isCustomIdentity && (
-              <div className={styles.customIdentityForm}>
-                <Title3>自定义身份属性</Title3>
-                <div className={styles.customRow}>
-                  <div className={styles.customLabel}>
-                    <Text>初始资金</Text>
-                    <Text weight="semibold">¥{customIdentity.initialCash.toLocaleString()}</Text>
-                  </div>
-                  <Slider
-                    min={10000}
-                    max={1000000}
-                    step={10000}
-                    value={customIdentity.initialCash}
-                    onChange={(e, data) => setCustomIdentity(prev => ({ ...prev, initialCash: data.value }))}
-                  />
-                </div>
-                <div className={styles.customRow}>
-                  <div className={styles.customLabel}>
-                    <Text>耐压能力</Text>
-                    <Text weight="semibold">{customIdentity.stressResistance}</Text>
-                  </div>
-                  <Slider
-                    min={1}
-                    max={100}
-                    value={customIdentity.stressResistance}
-                    onChange={(e, data) => setCustomIdentity(prev => ({ ...prev, stressResistance: data.value }))}
-                  />
-                </div>
-                <div className={styles.customRow}>
-                  <div className={styles.customLabel}>
-                    <Text>工作效率</Text>
-                    <Text weight="semibold">{customIdentity.workEfficiency}</Text>
-                  </div>
-                  <Slider
-                    min={1}
-                    max={100}
-                    value={customIdentity.workEfficiency}
-                    onChange={(e, data) => setCustomIdentity(prev => ({ ...prev, workEfficiency: data.value }))}
-                  />
-                </div>
-                <div className={styles.customRow}>
-                  <div className={styles.customLabel}>
-                    <Text>投资直觉</Text>
-                    <Text weight="semibold">{customIdentity.investmentSense}</Text>
-                  </div>
-                  <Slider
-                    min={1}
-                    max={100}
-                    value={customIdentity.investmentSense}
-                    onChange={(e, data) => setCustomIdentity(prev => ({ ...prev, investmentSense: data.value }))}
-                  />
-                </div>
-              </div>
-            )}
           </div>
 
           {/* 游戏模式 */}
           <div className={styles.section}>
-            <Title3 className={styles.sectionTitle}>
-              <SettingsRegular /> 游戏模式
-            </Title3>
+            <Title3 className={styles.sectionTitle}>游戏模式</Title3>
             <div className={styles.modeSelector}>
               <div
-                className={`${styles.modeCard} ${gameMode === 'normal' ? styles.modeCardSelected : ''}`}
+                className={getModeStyle('normal')}
                 onClick={() => setGameMode('normal')}
               >
-                <div style={{ fontSize: '48px', marginBottom: '12px' }}>📊</div>
-                <Text weight="semibold" size={400}>普通炒股</Text>
-                <Body2 style={{ marginTop: '8px', color: tokens.colorNeutralForeground2 }}>
-                  专注于股票交易，无需担心生存问题
-                </Body2>
+                <div style={{ fontSize: '36px' }}>📊</div>
+                <Text weight="semibold">普通炒股</Text>
+                <Caption1 style={{ display: 'block', marginTop: '4px' }}>
+                  专注交易
+                </Caption1>
               </div>
               <div
-                className={`${styles.modeCard} ${gameMode === 'survival' ? styles.modeCardSelected : ''}`}
+                className={getModeStyle('survival')}
                 onClick={() => setGameMode('survival')}
               >
-                <div style={{ fontSize: '48px', marginBottom: '12px' }}>🏠</div>
-                <Text weight="semibold" size={400}>生活炒股</Text>
-                <Body2 style={{ marginTop: '8px', color: tokens.colorNeutralForeground2 }}>
-                  平衡生活与投资，管理饥饿、口渴、健康、心情
-                </Body2>
+                <div style={{ fontSize: '36px' }}>🏠</div>
+                <Text weight="semibold">生活炒股</Text>
+                <Caption1 style={{ display: 'block', marginTop: '4px' }}>
+                  平衡生活
+                </Caption1>
               </div>
             </div>
           </div>
 
           {/* 难度选择 */}
           <div className={styles.section}>
-            <Title3 className={styles.sectionTitle}>
-              <SettingsRegular /> 难度选择
-            </Title3>
+            <Title3 className={styles.sectionTitle}>难度选择</Title3>
             <div className={styles.difficultyGrid}>
               {Object.entries(DIFFICULTY_CONFIG).map(([key, config]) => (
                 <div
                   key={key}
-                  className={`${styles.difficultyCard} ${difficulty === key ? styles.difficultyCardSelected : ''}`}
+                  className={getDifficultyStyle(key as Difficulty)}
                   onClick={() => setDifficulty(key as Difficulty)}
                 >
                   <Text weight="semibold">{config.name}</Text>
-                  <Caption1 style={{ marginTop: '4px', display: 'block' }}>
-                    {config.description}
-                  </Caption1>
                 </div>
               ))}
             </div>
-
-            {/* 自定义难度设置 */}
-            {difficulty === 'custom' && (
-              <div className={styles.customSettings}>
-                <Title3>自定义难度参数</Title3>
-                <div className={styles.customRow}>
-                  <div className={styles.customLabel}>
-                    <Text>初始资金</Text>
-                    <Text weight="semibold">¥{customDifficulty.initialCash.toLocaleString()}</Text>
-                  </div>
-                  <Slider
-                    min={10000}
-                    max={10000000}
-                    step={10000}
-                    value={customDifficulty.initialCash}
-                    onChange={(e, data) => setCustomDifficulty(prev => ({ ...prev, initialCash: data.value }))}
-                  />
-                </div>
-                <div className={styles.customRow}>
-                  <div className={styles.customLabel}>
-                    <Text>股票波动率</Text>
-                    <Text weight="semibold">{customDifficulty.stockVolatility.toFixed(1)}x</Text>
-                  </div>
-                  <Slider
-                    min={0.1}
-                    max={5}
-                    step={0.1}
-                    value={customDifficulty.stockVolatility}
-                    onChange={(e, data) => setCustomDifficulty(prev => ({ ...prev, stockVolatility: data.value }))}
-                  />
-                </div>
-                <div className={styles.customRow}>
-                  <div className={styles.customLabel}>
-                    <Text>生存衰减速度</Text>
-                    <Text weight="semibold">{customDifficulty.survivalDecayRate.toFixed(1)}x</Text>
-                  </div>
-                  <Slider
-                    min={0}
-                    max={5}
-                    step={0.1}
-                    value={customDifficulty.survivalDecayRate}
-                    onChange={(e, data) => setCustomDifficulty(prev => ({ ...prev, survivalDecayRate: data.value }))}
-                  />
-                </div>
-                <div className={styles.customRow}>
-                  <div className={styles.customLabel}>
-                    <Text>物价倍率</Text>
-                    <Text weight="semibold">{customDifficulty.foodPriceMultiplier.toFixed(1)}x</Text>
-                  </div>
-                  <Slider
-                    min={0.5}
-                    max={5}
-                    step={0.1}
-                    value={customDifficulty.foodPriceMultiplier}
-                    onChange={(e, data) => setCustomDifficulty(prev => ({ ...prev, foodPriceMultiplier: data.value }))}
-                  />
-                </div>
-                <div className={styles.customRow}>
-                  <div className={styles.customLabel}>
-                    <Text>工资倍率</Text>
-                    <Text weight="semibold">{customDifficulty.workPayMultiplier.toFixed(1)}x</Text>
-                  </div>
-                  <Slider
-                    min={0.5}
-                    max={5}
-                    step={0.1}
-                    value={customDifficulty.workPayMultiplier}
-                    onChange={(e, data) => setCustomDifficulty(prev => ({ ...prev, workPayMultiplier: data.value }))}
-                  />
-                </div>
-                <div className={styles.customRow}>
-                  <div className={styles.customLabel}>
-                    <Text>随机事件概率</Text>
-                    <Text weight="semibold">{customDifficulty.eventProbability.toFixed(1)}x</Text>
-                  </div>
-                  <Slider
-                    min={0}
-                    max={5}
-                    step={0.1}
-                    value={customDifficulty.eventProbability}
-                    onChange={(e, data) => setCustomDifficulty(prev => ({ ...prev, eventProbability: data.value }))}
-                  />
-                </div>
-              </div>
-            )}
           </div>
 
           {/* 按钮 */}
@@ -544,7 +325,7 @@ export function GameStartScreen({ onStartGame, onLoadGame, hasSaves }: GameStart
               开始游戏
             </Button>
           </div>
-        </Card>
+        </div>
       </Card>
     </div>
   );
